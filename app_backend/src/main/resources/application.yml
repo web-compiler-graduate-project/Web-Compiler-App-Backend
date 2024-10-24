@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: app_backend
+
+server:
+  port: 8084
