@@ -1,6 +1,27 @@
 spring:
   application:
     name: app_backend
+  cloud:
+    vault:
+      uri: http://vault:8200
+      token: ${VAULT_TOKEN_ID}
+      kv:
+        enabled: true
+        backend: secret
+        default-context: myapp
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 
 server:
   port: 8084
