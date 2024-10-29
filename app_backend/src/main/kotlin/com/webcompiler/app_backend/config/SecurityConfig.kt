@@ -1,67 +1,68 @@
 package com.webcompiler.app_backend.config
 
+import com.webcompiler.app_backend.service.CustomUserDetailsService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.core.userdetails.User
-import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.provisioning.InMemoryUserDetailsManager
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.reactive.CorsConfigurationSource
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
-
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig {
+class SecurityConfig(
+    @Autowired private val customUserDetailsService: CustomUserDetailsService,
+    @Autowired private val passwordEncoder: PasswordEncoder
+) {
 
     @Bean
     @Throws(Exception::class)
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
+            .csrf { csrf ->
+                csrf.disable()
+            }
+            .cors { }
             .authorizeHttpRequests { requests ->
                 requests
                     .requestMatchers("/api/register").permitAll()
-                    .requestMatchers("/api/user/").authenticated()
-                    .anyRequest().permitAll()
+                    .requestMatchers("/api/user/").hasRole("USER")
+                    .requestMatchers("/api/moderator/").hasRole("MODERATOR")
+                    .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                    .anyRequest().authenticated()
             }
-            .formLogin()
-            .and()
-            .logout()
+            .formLogin { }
+            .logout { }
 
         return http.build()
     }
 
     @Bean
-    fun userDetailsService(): UserDetailsService {
-        val user: UserDetails =
-            User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .roles("USER")
-                .build()
-
-        return InMemoryUserDetailsManager(user)
+    @Throws(java.lang.Exception::class)
+    fun authManager(http: HttpSecurity): AuthenticationManager {
+        return http
+            .getSharedObject(AuthenticationManagerBuilder::class.java)
+            .userDetailsService(customUserDetailsService)
+            .passwordEncoder(passwordEncoder)
+            .and()
+            .build()
     }
 
     @Bean
-    fun corsFilter(): CorsConfigurationSource {
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration = CorsConfiguration()
+        configuration.allowedOrigins = listOf("http://localhost", "http://localhost:3000")
+        configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        configuration.allowedHeaders = listOf("*")
+        configuration.allowCredentials = true
         val source = UrlBasedCorsConfigurationSource()
-        val config = CorsConfiguration()
-        config.allowCredentials = true
-        config.addAllowedOrigin("http://localhost")
-        config.addAllowedHeader("*")
-        config.addAllowedMethod("*")
-        source.registerCorsConfiguration("/**", config)
+        source.registerCorsConfiguration("/**", configuration)
         return source
     }
-
-
-//    @Bean
-//    fun passwordEncoder(): PasswordEncoder {
-//        return Argon2PasswordEncoder()
-//    }
 }
