@@ -29,8 +29,8 @@ class UserService @Autowired constructor(
             logger.info("Admin account with provided credentials already exists. Skipping admin initialization...")
         } else {
             val encodedPassword = passwordEncoder.encode(password)
-            val passwordPart1 = encodedPassword.take(password.length / 2)
-            val passwordPart2 = encodedPassword.drop(password.length / 2)
+            val passwordPart1 = encodedPassword.take(encodedPassword.length / 2) //TODO check
+            val passwordPart2 = encodedPassword.drop(encodedPassword.length / 2)
             val user = User(
                 name = username,
                 email = email,
@@ -51,8 +51,8 @@ class UserService @Autowired constructor(
         password: String,
     ) {
         val encodedPassword = passwordEncoder.encode(password)
-        val passwordPart1 = encodedPassword.take(password.length / 2)
-        val passwordPart2 = encodedPassword.drop(password.length / 2)
+        val passwordPart1 = encodedPassword.take(encodedPassword.length / 2)
+        val passwordPart2 = encodedPassword.drop(encodedPassword.length / 2)
         val user = User(
             name = username,
             email = email,

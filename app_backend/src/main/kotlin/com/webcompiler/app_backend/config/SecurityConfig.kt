@@ -18,7 +18,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableWebSecurity
 class SecurityConfig(
     @Autowired private val customUserDetailsService: CustomUserDetailsService,
-    @Autowired private val passwordEncoder: PasswordEncoder
+    @Autowired private val passwordEncoder: PasswordEncoder,
+    @Autowired private val authenticationSuccessHandler: CustomAuthenticationSuccessHandler,
+    @Autowired private val customLogoutSuccessHandler: CustomLogoutSuccessHandler,
 ) {
 
     @Bean
@@ -31,14 +33,19 @@ class SecurityConfig(
             .cors { }
             .authorizeHttpRequests { requests ->
                 requests
-                    .requestMatchers("/api/register").permitAll()
-                    .requestMatchers("/api/user/").hasRole("USER")
-                    .requestMatchers("/api/moderator/").hasRole("MODERATOR")
+                    .requestMatchers("/api/register", "/api/session-context/current-user").permitAll()
+                    .requestMatchers("/api/user/**").hasRole("USER")
+                    .requestMatchers("/api/moderator/**").hasRole("MODERATOR")
                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             }
-            .formLogin { }
-            .logout { }
+            .formLogin { form ->
+                form
+                    .successHandler(authenticationSuccessHandler)
+            }
+            .logout { logout ->
+                logout.logoutSuccessHandler(customLogoutSuccessHandler)
+            }
 
         return http.build()
     }
@@ -46,6 +53,7 @@ class SecurityConfig(
     @Bean
     @Throws(java.lang.Exception::class)
     fun authManager(http: HttpSecurity): AuthenticationManager {
+
         return http
             .getSharedObject(AuthenticationManagerBuilder::class.java)
             .userDetailsService(customUserDetailsService)
