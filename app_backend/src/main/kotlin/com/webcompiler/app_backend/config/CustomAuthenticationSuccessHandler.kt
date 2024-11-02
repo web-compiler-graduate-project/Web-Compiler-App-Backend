@@ -20,7 +20,7 @@ class CustomAuthenticationSuccessHandler : AuthenticationSuccessHandler {
         when {
             roles.contains("ROLE_" + AppUserRole.ADMIN) -> response.sendRedirect("http://localhost/admin")
             roles.contains("ROLE_" + AppUserRole.MODERATOR) -> response.sendRedirect("http://localhost/moderator")
-            roles.contains("ROLE_" + AppUserRole.USER) -> response.sendRedirect("http://localhost/user")
+            roles.contains("ROLE_" + AppUserRole.USER) -> response.sendRedirect("http://localhost/user/compile")
             else -> response.sendRedirect("http://localhost")
         }
     }
