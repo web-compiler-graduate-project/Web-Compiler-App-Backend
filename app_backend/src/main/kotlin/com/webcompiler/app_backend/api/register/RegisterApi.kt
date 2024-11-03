@@ -19,15 +19,12 @@ class RegisterApi(
     @PostMapping
     fun createUser(@RequestBody request: UserRegistrationRequest): ResponseEntity<String> {
         val (username, email, password) = request
-
         logger.info("Attempting to register user: $username with email: $email")
-
         userService.saveUser(
             username,
             email,
             password
         )
-
         logger.info("User registered successfully: $username")
         return ResponseEntity("User created successfully", HttpStatus.CREATED)
     }

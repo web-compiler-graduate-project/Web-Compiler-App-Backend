@@ -1,0 +1,27 @@
+package com.webcompiler.app_backend.model
+
+import jakarta.persistence.*
+
+import jakarta.persistence.*
+
+@Entity
+@Table(name = "task_solution")
+data class TaskSolution(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0,
+
+    @Column(nullable = true)
+    val comments: String?,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task", nullable = false)
+    val task: Task,
+
+    @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @JoinColumn(name = "compilation_result", referencedColumnName = "id")
+    val compilationResult: CompilationResult? = null,
+
+    @ManyToMany(mappedBy = "taskSolutions")
+    val users: List<AppUser> = mutableListOf()
+)
