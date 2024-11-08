@@ -9,17 +9,17 @@ data class AppUser(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @Column(unique = true, nullable = false)
-    val name: String,
+    @Column(unique = true, nullable = true)
+    val name: String? = null,
 
-    @Column(unique = true, nullable = false)
-    val email: String,
-
-    @Column(nullable = true)
-    val role: String?,
+    @Column(unique = true, nullable = true)
+    val email: String? = null,
 
     @Column(nullable = true)
-    val passwordPart1: String?,
+    val role: String? = null,
+
+    @Column(nullable = true)
+    val passwordPart1: String? = null,
 
     @OneToMany(mappedBy = "appUser", cascade = [CascadeType.ALL], orphanRemoval = true)
     val compilationResults: List<CompilationResult> = mutableListOf(),

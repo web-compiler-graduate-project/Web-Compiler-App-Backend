@@ -109,7 +109,7 @@ class UserService @Autowired constructor(
         if (currentPassword == null || newPassword == null || newPassword.length <= 7) {
             return null
         }
-        val fullPassword = user.passwordPart1 + vaultService.getPasswordPart2ByUsername(user.name)
+        val fullPassword = user.passwordPart1 + vaultService.getPasswordPart2ByUsername(user.name!!)
         if (currentPassword != fullPassword) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -123,7 +123,7 @@ class UserService @Autowired constructor(
 
     private fun updateUserDetails(user: AppUser, newUsername: String?, newEmail: String?, newPasswordPart1: String?) {
         newUsername?.let {
-            val passwordPart2 = vaultService.getPasswordPart2ByUsername(user.name)
+            val passwordPart2 = vaultService.getPasswordPart2ByUsername(user.name!!)
             vaultService.deletePasswordByUsername(user.name)
             vaultService.savePasswordPart2(newUsername, passwordPart2)
         }

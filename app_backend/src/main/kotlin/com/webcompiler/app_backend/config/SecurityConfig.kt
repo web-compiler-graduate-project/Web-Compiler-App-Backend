@@ -30,7 +30,9 @@ class SecurityConfig(
             .csrf { csrf ->
                 csrf.disable()
             }
-            .cors { }
+            .cors { cors ->
+                cors.configurationSource(corsConfigurationSource())
+            }
             .authorizeHttpRequests { requests ->
                 requests
                     .requestMatchers("/api/register", "/api/session-context/current-user").permitAll()

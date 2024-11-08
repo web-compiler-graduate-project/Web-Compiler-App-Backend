@@ -3,6 +3,7 @@ package com.webcompiler.app_backend.api.admin
 import com.webcompiler.app_backend.api.admin.request.ModeratorRegistrationRequest
 import com.webcompiler.app_backend.api.admin.request.ModeratorUpdateRequest
 import com.webcompiler.app_backend.api.register.RegisterApi
+import com.webcompiler.app_backend.api.user.request.UserUpdateRequest
 import com.webcompiler.app_backend.service.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/admin")
 class AdminApi(
     @Autowired private val userService: UserService
@@ -61,6 +63,26 @@ class AdminApi(
         } catch (e: Exception) {
             logger.error("Failed to delete moderator: ${e.message}", e)
             ResponseEntity("Error deleting moderator: ${e.message}", HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @PutMapping("/update-account")
+    fun updateUser(@RequestBody request: UserUpdateRequest): ResponseEntity<String> {
+        val (currentUsername, newUsername, newEmail, currentPassword, newPassword) = request
+        logger.info("Attempting to update admin account: $currentUsername")
+        return try {
+            userService.updateUser(
+                currentUsername,
+                newUsername,
+                newEmail,
+                currentPassword,
+                newPassword
+            )
+            logger.info("Admin account updated successfully: $currentUsername")
+            ResponseEntity("Admin account updated successfully", HttpStatus.OK)
+        } catch (e: Exception) {
+            logger.error("Failed to update admin account: ${e.message}", e)
+            ResponseEntity("Error updating admin account: ${e.message}", HttpStatus.BAD_REQUEST)
         }
     }
 }

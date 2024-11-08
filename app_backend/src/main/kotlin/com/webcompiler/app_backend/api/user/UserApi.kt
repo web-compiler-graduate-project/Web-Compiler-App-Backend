@@ -7,10 +7,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/user")
@@ -20,10 +17,10 @@ class UserApi(
 
     private val logger = LoggerFactory.getLogger(RegisterApi::class.java)
 
-    @PutMapping("/update-user")
+    @PostMapping("/update-account")
     fun updateUser(@RequestBody request: UserUpdateRequest): ResponseEntity<String> {
         val (currentUsername, newUsername, newEmail, currentPassword, newPassword) = request
-        logger.info("Attempting to update user: $currentUsername with new email: $newEmail")
+        logger.info("Attempting to update user account: $currentUsername")
         return try {
             userService.updateUser(
                 currentUsername,
@@ -32,11 +29,11 @@ class UserApi(
                 currentPassword,
                 newPassword
             )
-            logger.info("User updated successfully: $currentUsername")
-            ResponseEntity("User updated successfully", HttpStatus.OK)
+            logger.info("User account updated successfully: $currentUsername")
+            ResponseEntity("User account updated successfully", HttpStatus.OK)
         } catch (e: Exception) {
-            logger.error("Failed to update user: ${e.message}", e)
-            ResponseEntity("Error updating user: ${e.message}", HttpStatus.BAD_REQUEST)
+            logger.error("Failed to update user account: ${e.message}", e)
+            ResponseEntity("Error updating user account: ${e.message}", HttpStatus.BAD_REQUEST)
         }
     }
 }
