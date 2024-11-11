@@ -50,7 +50,7 @@ class VaultService(
 
     fun updatePasswordPart2ByUsername(username: String, newPasswordPart2: String) {
         val secret = mapOf("data" to mapOf("password_part2" to newPasswordPart2))
-        val url = "$vaultUrl/v1/secret/data/web-compiler/$username"
+        val url = "$vaultUrl/v1/secret/metadata/web-compiler/$username"
         val headers = HttpHeaders().apply {
             set("X-Vault-Token", vaultToken)
             contentType = MediaType.APPLICATION_JSON
@@ -67,7 +67,7 @@ class VaultService(
     }
 
     fun deletePasswordByUsername(username: String) {
-        val url = "$vaultUrl/v1/secret/data/web-compiler/$username"
+        val url = "$vaultUrl/v1/secret/metadata/web-compiler/$username"
         val headers = HttpHeaders().apply {
             set("X-Vault-Token", vaultToken)
             contentType = MediaType.APPLICATION_JSON

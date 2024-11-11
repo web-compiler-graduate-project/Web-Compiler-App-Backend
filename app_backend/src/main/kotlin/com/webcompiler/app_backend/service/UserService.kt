@@ -106,11 +106,11 @@ class UserService @Autowired constructor(
         newPassword: String?,
         newUsername: String?
     ): String? {
-        if (currentPassword == null || newPassword == null || newPassword.length <= 7) {
+        if (currentPassword == null || newPassword == null) {
             return null
         }
         val fullPassword = user.passwordPart1 + vaultService.getPasswordPart2ByUsername(user.name!!)
-        if (currentPassword != fullPassword) {
+        if (!passwordEncoder.matches(currentPassword, fullPassword)) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "Provided password does not match our records. Please check your password and try again."
@@ -122,11 +122,6 @@ class UserService @Autowired constructor(
     }
 
     private fun updateUserDetails(user: AppUser, newUsername: String?, newEmail: String?, newPasswordPart1: String?) {
-        newUsername?.let {
-            val passwordPart2 = vaultService.getPasswordPart2ByUsername(user.name!!)
-            vaultService.deletePasswordByUsername(user.name)
-            vaultService.savePasswordPart2(newUsername, passwordPart2)
-        }
         userRepository.save(
             user.copy(
                 name = newUsername ?: user.name,

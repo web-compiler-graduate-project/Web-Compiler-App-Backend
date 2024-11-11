@@ -1,6 +1,6 @@
 package com.webcompiler.app_backend.api.admin.request
 
-data class ModeratorUpdateRequest (
+data class AdminUpdateRequest (
     val currentUsername: String,
     val newUsername: String? = null,
     val newEmail: String? = null,

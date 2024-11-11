@@ -1,7 +1,8 @@
 package com.webcompiler.app_backend.api.admin
 
+import com.webcompiler.app_backend.api.admin.request.AdminUpdateRequest
 import com.webcompiler.app_backend.api.admin.request.ModeratorRegistrationRequest
-import com.webcompiler.app_backend.api.admin.request.ModeratorUpdateRequest
+import com.webcompiler.app_backend.api.moderator.request.ModeratorUpdateRequest
 import com.webcompiler.app_backend.api.register.RegisterApi
 import com.webcompiler.app_backend.api.user.request.UserUpdateRequest
 import com.webcompiler.app_backend.service.UserService
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/admin")
 class AdminApi(
     @Autowired private val userService: UserService
@@ -33,26 +33,6 @@ class AdminApi(
         return ResponseEntity("Moderator created successfully", HttpStatus.CREATED)
     }
 
-    @PutMapping("/update-moderator")
-    fun updateModerator(@RequestBody request: ModeratorUpdateRequest): ResponseEntity<String> {
-        val (currentUsername, newUsername, newEmail, currentPassword, newPassword) = request
-        logger.info("Attempting to update moderator: $currentUsername with new email: $newEmail")
-        return try {
-            userService.updateUser(
-                currentUsername,
-                newUsername,
-                newEmail,
-                currentPassword,
-                newPassword
-            )
-            logger.info("Moderator updated successfully: $currentUsername")
-            ResponseEntity("Moderator updated successfully", HttpStatus.OK)
-        } catch (e: Exception) {
-            logger.error("Failed to update moderator: ${e.message}", e)
-            ResponseEntity("Error updating moderator: ${e.message}", HttpStatus.BAD_REQUEST)
-        }
-    }
-
     @DeleteMapping("/delete-moderator")
     fun deleteModerator(@RequestParam userName: String): ResponseEntity<String> {
         logger.info("Attempting to delete moderator: $userName")
@@ -67,7 +47,7 @@ class AdminApi(
     }
 
     @PutMapping("/update-account")
-    fun updateUser(@RequestBody request: UserUpdateRequest): ResponseEntity<String> {
+    fun updateUser(@RequestBody request: AdminUpdateRequest): ResponseEntity<String> {
         val (currentUsername, newUsername, newEmail, currentPassword, newPassword) = request
         logger.info("Attempting to update admin account: $currentUsername")
         return try {
