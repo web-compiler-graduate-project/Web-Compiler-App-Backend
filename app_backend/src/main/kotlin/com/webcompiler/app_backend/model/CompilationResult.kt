@@ -10,14 +10,14 @@ data class CompilationResult(
     val id: Long = 0,
 
     @Column(columnDefinition = "TEXT")
-    val code: String?,
+    val code: String? = null,
 
     @Column(columnDefinition = "TEXT")
-    val output: String?,
+    val output: String? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    val appUser: AppUser,
+    val appUser: AppUser? = null,
 
     @OneToOne(mappedBy = "compilationResult", fetch = FetchType.LAZY, optional = true)
     val taskSolution: TaskSolution? = null

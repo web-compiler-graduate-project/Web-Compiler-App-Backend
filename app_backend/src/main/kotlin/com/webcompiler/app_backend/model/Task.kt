@@ -10,10 +10,10 @@ data class Task(
     val id: Long = 0,
 
     @Column(nullable = false)
-    val title: String,
+    val title: String? = null,
 
     @Column(nullable = true)
-    val description: String?,
+    val description: String? = null,
 
     @OneToMany(mappedBy = "task", cascade = [CascadeType.ALL], orphanRemoval = true)
     val taskSolutions: List<TaskSolution> = mutableListOf(),

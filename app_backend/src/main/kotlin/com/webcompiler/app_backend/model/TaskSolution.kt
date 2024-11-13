@@ -12,11 +12,11 @@ data class TaskSolution(
     val id: Long = 0,
 
     @Column(nullable = true)
-    val comments: String?,
+    val comments: String? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task", nullable = false)
-    val task: Task,
+    val task: Task? = null,
 
     @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinColumn(name = "compilation_result", referencedColumnName = "id")
