@@ -4,6 +4,7 @@ import com.webcompiler.app_backend.api.register.RegisterApi
 import com.webcompiler.app_backend.api.user.request.CompilationResultSaveRequest
 import com.webcompiler.app_backend.api.user.request.UserUpdateRequest
 import com.webcompiler.app_backend.api.user.response.UserCompilationHistoryResponse
+import com.webcompiler.app_backend.config.CustomUserDetails
 import com.webcompiler.app_backend.service.CompilationResultService
 import com.webcompiler.app_backend.service.UserService
 import org.slf4j.LoggerFactory
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
@@ -27,7 +27,7 @@ class UserApi(
     @PutMapping("/update-account")
     fun updateUser(
         @RequestBody request: UserUpdateRequest,
-        @AuthenticationPrincipal userDetails: UserDetails
+        @AuthenticationPrincipal userDetails: CustomUserDetails
     ): ResponseEntity<String> {
         val (currentUsername, newUsername, newEmail, currentPassword, newPassword) = request
         if (userDetails.username != currentUsername) {
@@ -68,7 +68,7 @@ class UserApi(
     }
 
     @GetMapping("/user-compilation-history")
-    fun getUserCompilationHistory(@AuthenticationPrincipal userDetails: UserDetails): ResponseEntity<List<UserCompilationHistoryResponse>> {
+    fun getUserCompilationHistory(@AuthenticationPrincipal userDetails: CustomUserDetails): ResponseEntity<List<UserCompilationHistoryResponse>> {
         val username = userDetails.username
         logger.info("Fetching compilation history for user: $username")
         return try {
@@ -97,7 +97,7 @@ class UserApi(
     @DeleteMapping("/user-compilation-history/{id}")
     fun deleteCompilationResult(
         @PathVariable id: Long,
-        @AuthenticationPrincipal userDetails: UserDetails
+        @AuthenticationPrincipal userDetails: CustomUserDetails
     ): ResponseEntity<String> {
         val username = userDetails.username
         logger.info("Request to delete compilation result with ID $id for user: $username")

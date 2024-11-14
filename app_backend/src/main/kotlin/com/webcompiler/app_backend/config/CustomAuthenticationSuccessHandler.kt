@@ -15,7 +15,7 @@ class CustomAuthenticationSuccessHandler : AuthenticationSuccessHandler {
         response: HttpServletResponse,
         authentication: Authentication
     ) {
-        val userDetails = authentication.principal as UserDetails
+        val userDetails = authentication.principal as CustomUserDetails
         val roles = userDetails.authorities.map { it.authority }
         when {
             roles.contains("ROLE_" + AppUserRole.ADMIN) -> response.sendRedirect("http://localhost/admin")

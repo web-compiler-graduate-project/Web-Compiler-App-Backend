@@ -136,4 +136,59 @@ class UserService @Autowired constructor(
         userRepository.deleteByName(username)
         vaultService.deletePasswordByUsername(username)
     }
+
+    fun getModerators(): List<AppUser> =
+        userRepository.findAllByRole(AppUserRole.MODERATOR.toString())
+
+    @Transactional
+    fun deleteModeratorById(id: Long) {
+        val user = userRepository.findById(id).orElseThrow {
+            ResponseStatusException(HttpStatus.NOT_FOUND, "Moderator not found")
+        }
+        if (user.role != AppUserRole.MODERATOR.toString()) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "User is not a moderator")
+        }
+        userRepository.delete(user)
+        vaultService.deletePasswordByUsername(
+            user.name ?: throw ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Corrupted data - requested user has not username."
+            )
+        )
+    }
+
+    @Transactional
+    fun updateAccountStatus(id: Long, isEnabled: Boolean) {
+        val user = userRepository.findById(id).orElseThrow {
+            ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
+        }
+        if (user.role == AppUserRole.ADMIN.toString()) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "Admin account status cannot be changed.")
+        }
+        userRepository.save(
+            user.copy(
+                isEnabled = isEnabled
+            )
+        )
+    }
+
+    fun getUsers(): List<AppUser> =
+        userRepository.findAllByRole(AppUserRole.USER.toString())
+
+    @Transactional
+    fun deleteUserById(id: Long) {
+        val user = userRepository.findById(id).orElseThrow {
+            ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
+        }
+        if (user.role != AppUserRole.USER.toString()) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "User is not a user.")
+        }
+        userRepository.delete(user)
+        vaultService.deletePasswordByUsername(
+            user.name ?: throw ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Corrupted data - requested user has not username."
+            )
+        )
+    }
 }

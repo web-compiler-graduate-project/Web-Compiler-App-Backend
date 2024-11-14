@@ -1,16 +1,12 @@
 package com.webcompiler.app_backend.service
 
+import com.webcompiler.app_backend.config.CustomUserDetails
 import com.webcompiler.app_backend.repository.UserRepository
 import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.userdetails.User
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
-import java.io.BufferedReader
-import java.io.File
-import java.io.InputStreamReader
 
 @Service
 class CustomUserDetailsService(
@@ -19,15 +15,11 @@ class CustomUserDetailsService(
     @Autowired private val userService: UserService,
 ) : UserDetailsService {
 
-    override fun loadUserByUsername(username: String): UserDetails {
+    override fun loadUserByUsername(username: String): CustomUserDetails {
         val user = userRepository.findByName(username)
             ?: throw UsernameNotFoundException("User not found with username: $username")
         val passwordPart2 = vaultService.getPasswordPart2ByUsername(username)
-        return User
-            .withUsername(user.name)
-            .password(user.passwordPart1 + passwordPart2)
-            .roles(user.role)
-            .build()
+        return CustomUserDetails(user, passwordPart2)
     }
 
     @PostConstruct

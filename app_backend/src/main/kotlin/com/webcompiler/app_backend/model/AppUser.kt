@@ -18,6 +18,8 @@ data class AppUser(
     @Column(nullable = true)
     val role: String? = null,
 
+    val isEnabled: Boolean = true,
+
     @Column(nullable = true)
     val passwordPart1: String? = null,
 

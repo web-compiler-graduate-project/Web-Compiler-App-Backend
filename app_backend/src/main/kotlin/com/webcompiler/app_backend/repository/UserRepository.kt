@@ -12,4 +12,6 @@ interface UserRepository : JpaRepository<AppUser, Long> {
     fun existsByName(name: String): Boolean
 
     fun deleteByName(name: String)
+
+    fun findAllByRole(role: String): List<AppUser>
 }
