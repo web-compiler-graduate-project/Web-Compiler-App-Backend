@@ -11,11 +11,11 @@ data class TaskSolution(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @Column(nullable = true)
+    @Column(columnDefinition = "TEXT", nullable = true)
     val comments: String? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task", nullable = false)
+    @JoinColumn(name = "task", nullable = true)
     val task: Task? = null,
 
     @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)

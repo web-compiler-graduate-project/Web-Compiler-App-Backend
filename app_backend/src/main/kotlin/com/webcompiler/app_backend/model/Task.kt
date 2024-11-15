@@ -9,17 +9,19 @@ data class Task(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     val title: String? = null,
 
-    @Column(nullable = true)
+    @Column(columnDefinition = "TEXT", nullable = true)
     val description: String? = null,
 
-    @OneToMany(mappedBy = "task", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val taskSolutions: List<TaskSolution> = mutableListOf(),
+    val isEnabled: Boolean = true,
 
-    @ManyToMany(mappedBy = "tasks")
-    val users: List<AppUser> = mutableListOf()
+    @OneToMany(mappedBy = "task", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val taskSolutions: MutableList<TaskSolution> = mutableListOf(),
+
+    @ManyToMany(mappedBy = "tasks", cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    val users: MutableList<AppUser> = mutableListOf()
 )
 
 

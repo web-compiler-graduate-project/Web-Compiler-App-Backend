@@ -24,15 +24,15 @@ data class AppUser(
     val passwordPart1: String? = null,
 
     @OneToMany(mappedBy = "appUser", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val compilationResults: List<CompilationResult> = mutableListOf(),
+    val compilationResults: MutableList<CompilationResult> = mutableListOf(),
 
-    @ManyToMany
+    @ManyToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinTable(
         name = "user_task",
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "task_id")]
     )
-    val tasks: List<Task> = mutableListOf(),
+    val tasks: MutableList<Task> = mutableListOf(),
 
     @ManyToMany
     @JoinTable(
@@ -40,5 +40,5 @@ data class AppUser(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "task_solution_id")]
     )
-    val taskSolutions: List<TaskSolution> = mutableListOf()
+    val taskSolutions: MutableList<TaskSolution> = mutableListOf()
 )
