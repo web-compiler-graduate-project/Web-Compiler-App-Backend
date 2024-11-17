@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface TaskRepository: JpaRepository<Task, Long> {
 
-    fun findAllByIsEnabled(isEnabled: Boolean): List<Task>
+    fun findByIsEnabledTrueAndUsersNotContaining(user: AppUser): List<Task>
 
     fun findByUsersContaining(user: AppUser): List<Task>
 }

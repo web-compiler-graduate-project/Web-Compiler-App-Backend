@@ -3,9 +3,11 @@ package com.webcompiler.app_backend.api.user
 import com.webcompiler.app_backend.api.register.RegisterApi
 import com.webcompiler.app_backend.api.user.request.CompilationResultSaveRequest
 import com.webcompiler.app_backend.api.user.request.UserUpdateRequest
+import com.webcompiler.app_backend.api.user.response.TaskResponse
 import com.webcompiler.app_backend.api.user.response.UserCompilationHistoryResponse
 import com.webcompiler.app_backend.config.CustomUserDetails
 import com.webcompiler.app_backend.service.CompilationResultService
+import com.webcompiler.app_backend.service.TaskService
 import com.webcompiler.app_backend.service.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +21,8 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/api/user")
 class UserApi(
     @Autowired private val userService: UserService,
-    @Autowired private val compilationResultService: CompilationResultService
+    @Autowired private val compilationResultService: CompilationResultService,
+    @Autowired private val taskService: TaskService
 ) {
 
     private val logger = LoggerFactory.getLogger(RegisterApi::class.java)
@@ -113,6 +116,76 @@ class UserApi(
         } catch (ex: Exception) {
             logger.error("Error deleting compilation result with ID $id for user: $username", ex)
             ResponseEntity("Error deleting compilation result", HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+    @GetMapping("/tasks")
+    fun getAvailableTasks(@AuthenticationPrincipal userDetails: CustomUserDetails): ResponseEntity<List<TaskResponse>> {
+        return try {
+            val availableTasks = taskService
+                .getAllAvailableTasks(userDetails.username)
+                .map { task ->
+                    TaskResponse(
+                        title = task.title,
+                        description = task.description,
+                        id = task.id
+                    )
+                }
+            if (availableTasks.isEmpty()) {
+                logger.info("No available tasks found for user: ${userDetails.username}")
+                ResponseEntity(emptyList(), HttpStatus.NO_CONTENT)
+            } else {
+                logger.info("Available tasks fetched for user: ${userDetails.username}")
+                ResponseEntity(availableTasks, HttpStatus.OK)
+            }
+        } catch (ex: Exception) {
+            logger.error("Error fetching available tasks for user: ${userDetails.username}", ex)
+            ResponseEntity(emptyList<TaskResponse>(), HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+
+    @PostMapping("/register-in-task/{taskId}")
+    fun registerInTask(
+        @PathVariable taskId: Long,
+        @AuthenticationPrincipal userDetails: CustomUserDetails
+    ): ResponseEntity<String> {
+        return try {
+            taskService.registerUserInTask(taskId, userDetails.username)
+            ResponseEntity(
+                "User ${userDetails.username} successfully registered in task with id $taskId",
+                HttpStatus.OK
+            )
+        } catch (ex: Exception) {
+            ResponseEntity("Error registering user in task: ${ex.message}", HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @GetMapping("/is-task-assigned")
+    fun isTaskAssignedToUser(@AuthenticationPrincipal userDetails: CustomUserDetails): ResponseEntity<Boolean> {
+        return try {
+            ResponseEntity.ok(taskService.isTaskAssignedToUser(userDetails.username))
+        } catch (ex: Exception) {
+            ResponseEntity(false, HttpStatus.OK)
+        }
+    }
+
+    @GetMapping("/assigned-task-details")
+    fun getAssignedTaskDetails(@AuthenticationPrincipal userDetails: CustomUserDetails): ResponseEntity<TaskResponse> {
+        return try {
+            val taskDetails = taskService.getAssignedTaskDetails(userDetails.username)
+            ResponseEntity.ok(
+                TaskResponse(
+                    title = taskDetails.title,
+                    description = taskDetails.description,
+                    id = taskDetails.id
+                )
+            )
+        } catch (ex: Exception) {
+            return ResponseEntity(
+                TaskResponse("Error fetching task details: ${ex.message}"),
+                HttpStatus.BAD_REQUEST
+            )
         }
     }
 }
