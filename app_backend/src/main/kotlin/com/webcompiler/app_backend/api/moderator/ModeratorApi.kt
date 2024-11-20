@@ -7,6 +7,7 @@ import com.webcompiler.app_backend.api.register.RegisterApi
 import com.webcompiler.app_backend.config.CustomUserDetails
 import com.webcompiler.app_backend.model.AppUserRole
 import com.webcompiler.app_backend.service.TaskService
+import com.webcompiler.app_backend.service.TaskSolutionService
 import com.webcompiler.app_backend.service.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired

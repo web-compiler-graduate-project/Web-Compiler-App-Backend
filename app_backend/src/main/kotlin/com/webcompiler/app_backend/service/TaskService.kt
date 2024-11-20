@@ -2,7 +2,9 @@ package com.webcompiler.app_backend.service
 
 import com.webcompiler.app_backend.model.AppUser
 import com.webcompiler.app_backend.model.Task
+import com.webcompiler.app_backend.model.TaskSolution
 import com.webcompiler.app_backend.repository.TaskRepository
+import com.webcompiler.app_backend.repository.TaskSolutionRepository
 import com.webcompiler.app_backend.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,6 +51,7 @@ class TaskService(
         return taskRepository.findByUsersContaining(moderator)
     }
 
+    @Transactional
     fun deleteTask(taskId: Long) {
         val task = taskRepository.findById(taskId).orElseThrow {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found")
@@ -56,6 +59,7 @@ class TaskService(
         taskRepository.delete(task)
     }
 
+    @Transactional
     fun toggleTaskStatus(taskId: Long) {
         val task = taskRepository.findById(taskId).orElseThrow {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found")
@@ -67,6 +71,7 @@ class TaskService(
         )
     }
 
+    @Transactional
     fun registerUserInTask(taskId: Long, username: String) {
         val task = taskRepository.findById(taskId).orElseThrow {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found")
@@ -90,10 +95,9 @@ class TaskService(
         if (user.tasks.size > user.taskSolutions.size) {
             val assignedTask = user.tasks.filter { task ->
                 !user.taskSolutions.any { it.task == task }
-            }.sortedBy { it.id }.firstOrNull()
+            }.minByOrNull { it.id }
             return assignedTask ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "No assigned task found")
         }
         throw ResponseStatusException(HttpStatus.NOT_FOUND, "No task assigned to the user")
     }
-
 }

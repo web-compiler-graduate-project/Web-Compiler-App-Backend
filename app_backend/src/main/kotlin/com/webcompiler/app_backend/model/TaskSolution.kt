@@ -23,5 +23,5 @@ data class TaskSolution(
     val compilationResult: CompilationResult? = null,
 
     @ManyToMany(mappedBy = "taskSolutions")
-    val users: List<AppUser> = mutableListOf()
+    val users: MutableList<AppUser> = mutableListOf()
 )

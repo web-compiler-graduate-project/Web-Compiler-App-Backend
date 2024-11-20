@@ -8,6 +8,7 @@ import com.webcompiler.app_backend.api.user.response.UserCompilationHistoryRespo
 import com.webcompiler.app_backend.config.CustomUserDetails
 import com.webcompiler.app_backend.service.CompilationResultService
 import com.webcompiler.app_backend.service.TaskService
+import com.webcompiler.app_backend.service.TaskSolutionService
 import com.webcompiler.app_backend.service.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +23,8 @@ import org.springframework.web.server.ResponseStatusException
 class UserApi(
     @Autowired private val userService: UserService,
     @Autowired private val compilationResultService: CompilationResultService,
-    @Autowired private val taskService: TaskService
+    @Autowired private val taskService: TaskService,
+    @Autowired private val taskSolutionService: TaskSolutionService
 ) {
 
     private val logger = LoggerFactory.getLogger(RegisterApi::class.java)
@@ -186,6 +188,22 @@ class UserApi(
                 TaskResponse("Error fetching task details: ${ex.message}"),
                 HttpStatus.BAD_REQUEST
             )
+        }
+    }
+
+    @PostMapping("/submit-solution")
+    fun submitSolution(@AuthenticationPrincipal userDetails: CustomUserDetails): ResponseEntity<String> {
+        logger.info("Attempting to submit solution for user: ${userDetails.username}")
+        return try {
+            taskSolutionService.submitSolution(userDetails.username)
+            logger.info("Solution submitted successfully for user: ${userDetails.username}")
+            ResponseEntity("Solution submitted successfully", HttpStatus.CREATED)
+        } catch (e: ResponseStatusException) {
+            logger.error("Failed to submit solution: ${e.reason}", e)
+            ResponseEntity("Error submitting solution: ${e.reason}", HttpStatus.BAD_REQUEST)
+        } catch (e: Exception) {
+            logger.error("Unexpected error occurred while submitting solution: ${e.message}", e)
+            ResponseEntity("Unexpected error: ${e.message}", HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
 }
