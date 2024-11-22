@@ -37,12 +37,6 @@ class TaskSolutionService(
         taskSolutionRepository.save(solution)
     }
 
-    fun getSolutionsByTaskId(taskId: Long): List<TaskSolution> =
-        taskRepository.findByIdOrNull(taskId)?.taskSolutions ?: throw ResponseStatusException(
-            HttpStatus.NOT_FOUND,
-            "Task with id $taskId not found."
-        )
-
     fun gradeSolution(solutionId: Long, grade: Int, comments: String) {
         val solution = taskSolutionRepository.findByIdOrNull(solutionId) ?: throw ResponseStatusException(
             HttpStatus.NOT_FOUND,
@@ -54,5 +48,11 @@ class TaskSolutionService(
                 grade = grade
             )
         )
+    }
+
+    fun getAllUserTaskSolutions(username: String): List<TaskSolution> {
+        val user =
+            userRepository.findByName(username) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
+        return user.taskSolutions
     }
 }

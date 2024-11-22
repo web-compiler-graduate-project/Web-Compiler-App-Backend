@@ -4,6 +4,7 @@ import com.webcompiler.app_backend.api.register.RegisterApi
 import com.webcompiler.app_backend.api.user.request.CompilationResultSaveRequest
 import com.webcompiler.app_backend.api.user.request.UserUpdateRequest
 import com.webcompiler.app_backend.api.user.response.TaskResponse
+import com.webcompiler.app_backend.api.user.response.TaskSolutionResponse
 import com.webcompiler.app_backend.api.user.response.UserCompilationHistoryResponse
 import com.webcompiler.app_backend.config.CustomUserDetails
 import com.webcompiler.app_backend.service.CompilationResultService
@@ -142,7 +143,7 @@ class UserApi(
             }
         } catch (ex: Exception) {
             logger.error("Error fetching available tasks for user: ${userDetails.username}", ex)
-            ResponseEntity(emptyList<TaskResponse>(), HttpStatus.INTERNAL_SERVER_ERROR)
+            ResponseEntity(emptyList(), HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
 
@@ -185,7 +186,7 @@ class UserApi(
             )
         } catch (ex: Exception) {
             return ResponseEntity(
-                TaskResponse("Error fetching task details: ${ex.message}"),
+                TaskResponse(message = "Error fetching task details: ${ex.message}"),
                 HttpStatus.BAD_REQUEST
             )
         }
@@ -204,6 +205,31 @@ class UserApi(
         } catch (e: Exception) {
             logger.error("Unexpected error occurred while submitting solution: ${e.message}", e)
             ResponseEntity("Unexpected error: ${e.message}", HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+    @GetMapping("/task-solutions")
+    fun getTaskSolutions(@AuthenticationPrincipal userDetails: CustomUserDetails): ResponseEntity<List<TaskSolutionResponse>> {
+        return try {
+            val solutions = taskSolutionService.getAllUserTaskSolutions(userDetails.username)
+            ResponseEntity.ok(
+                solutions.map { solution ->
+                    TaskSolutionResponse(
+                        id = solution.id,
+                        comments = solution.comments,
+                        grade = solution.grade,
+                        code = solution.compilationResult?.code,
+                        output = solution.compilationResult?.output,
+                        taskName = solution.task?.title,
+                        taskDescription = solution.task?.description
+                    )
+                }
+            )
+        } catch (ex: Exception) {
+            return ResponseEntity(
+                emptyList(),
+                HttpStatus.BAD_REQUEST
+            )
         }
     }
 }
