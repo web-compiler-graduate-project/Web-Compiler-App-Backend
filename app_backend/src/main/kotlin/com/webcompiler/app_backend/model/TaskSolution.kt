@@ -14,6 +14,8 @@ data class TaskSolution(
     @Column(columnDefinition = "TEXT", nullable = true)
     val comments: String? = null,
 
+    val grade: Int? = null,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task", nullable = true)
     val task: Task? = null,
