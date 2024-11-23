@@ -7,10 +7,7 @@ import com.webcompiler.app_backend.api.user.response.TaskResponse
 import com.webcompiler.app_backend.api.user.response.TaskSolutionResponse
 import com.webcompiler.app_backend.api.user.response.UserCompilationHistoryResponse
 import com.webcompiler.app_backend.config.CustomUserDetails
-import com.webcompiler.app_backend.service.CompilationResultService
-import com.webcompiler.app_backend.service.TaskService
-import com.webcompiler.app_backend.service.TaskSolutionService
-import com.webcompiler.app_backend.service.UserService
+import com.webcompiler.app_backend.service.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -25,7 +22,8 @@ class UserApi(
     @Autowired private val userService: UserService,
     @Autowired private val compilationResultService: CompilationResultService,
     @Autowired private val taskService: TaskService,
-    @Autowired private val taskSolutionService: TaskSolutionService
+    @Autowired private val taskSolutionService: TaskSolutionService,
+    @Autowired private val compilationResultDownloaderService: CompilationResultDownloaderService
 ) {
 
     private val logger = LoggerFactory.getLogger(RegisterApi::class.java)
@@ -121,6 +119,10 @@ class UserApi(
             ResponseEntity("Error deleting compilation result", HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
+
+    @PostMapping("/user-compilation-history/{id}")
+    fun downloadCompilationResult(@PathVariable id: Long): ResponseEntity<ByteArray> =
+        compilationResultDownloaderService.downloadCompilationResultById(id)
 
     @GetMapping("/tasks")
     fun getAvailableTasks(@AuthenticationPrincipal userDetails: CustomUserDetails): ResponseEntity<List<TaskResponse>> {

@@ -1,7 +1,5 @@
 package com.webcompiler.app_backend.api.admin.response
 
-import com.webcompiler.app_backend.api.moderator.response.TaskSolutionResponse
-
 data class TaskResponse(
     val title: String? = null,
     val description: String? = null,
