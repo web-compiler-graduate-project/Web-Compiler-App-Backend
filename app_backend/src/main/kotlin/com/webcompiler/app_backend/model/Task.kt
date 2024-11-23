@@ -1,6 +1,8 @@
 package com.webcompiler.app_backend.model
 
 import jakarta.persistence.*
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 @Entity
 @Table(name = "task")
@@ -22,6 +24,12 @@ data class Task(
 
     @ManyToMany(mappedBy = "tasks", cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     val users: MutableList<AppUser> = mutableListOf()
-)
+) {
+
+    fun getModeratorTaskOwner(): AppUser =
+        users.find { user ->
+            user.role == AppUserRole.MODERATOR.toString()
+        } ?: throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Task has not assigned moderator owner.")
+}
 
 

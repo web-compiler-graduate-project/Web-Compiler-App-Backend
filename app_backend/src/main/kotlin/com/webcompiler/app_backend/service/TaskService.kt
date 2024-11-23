@@ -100,4 +100,7 @@ class TaskService(
         }
         throw ResponseStatusException(HttpStatus.NOT_FOUND, "No task assigned to the user")
     }
+
+    fun getAllTasks(): List<Task> =
+        taskRepository.findAll()
 }
