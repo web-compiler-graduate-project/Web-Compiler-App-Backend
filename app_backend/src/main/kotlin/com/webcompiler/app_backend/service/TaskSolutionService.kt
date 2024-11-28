@@ -1,7 +1,6 @@
 package com.webcompiler.app_backend.service
 
 import com.webcompiler.app_backend.model.TaskSolution
-import com.webcompiler.app_backend.repository.TaskRepository
 import com.webcompiler.app_backend.repository.TaskSolutionRepository
 import com.webcompiler.app_backend.repository.UserRepository
 import jakarta.transaction.Transactional
@@ -15,7 +14,6 @@ import org.springframework.web.server.ResponseStatusException
 class TaskSolutionService(
     @Autowired private val userRepository: UserRepository,
     @Autowired private val taskSolutionRepository: TaskSolutionRepository,
-    @Autowired private val taskRepository: TaskRepository
 ) {
 
     @Transactional
