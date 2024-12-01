@@ -3,7 +3,7 @@ spring:
     name: app_backend
   cloud:
     vault:
-      uri: http://vault:8200
+      uri: ${VAULT_URL}
       token: ${VAULT_TOKEN_ID}
       kv:
         enabled: true

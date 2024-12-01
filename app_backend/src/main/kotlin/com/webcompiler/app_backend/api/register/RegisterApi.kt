@@ -1,7 +1,7 @@
 package com.webcompiler.app_backend.api.register
 
 import com.webcompiler.app_backend.api.register.request.UserRegistrationRequest
-import com.webcompiler.app_backend.service.UserService
+import com.webcompiler.app_backend.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus

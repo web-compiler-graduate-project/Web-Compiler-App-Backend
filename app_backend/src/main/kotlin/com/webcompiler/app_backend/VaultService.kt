@@ -1,4 +1,4 @@
-package com.webcompiler.app_backend.service
+package com.webcompiler.app_backend
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Value

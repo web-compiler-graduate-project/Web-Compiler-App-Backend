@@ -1,10 +1,11 @@
+package com.webcompiler.app_backend.service
+
 import com.webcompiler.app_backend.model.*
 import com.webcompiler.app_backend.repository.*
-import com.webcompiler.app_backend.service.TaskSolutionService
+import com.webcompiler.app_backend.TaskSolutionService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.*

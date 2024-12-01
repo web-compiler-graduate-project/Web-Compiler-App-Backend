@@ -1,5 +1,6 @@
 package com.webcompiler.app_backend.service
 
+import com.webcompiler.app_backend.TaskService
 import com.webcompiler.app_backend.model.AppUser
 import com.webcompiler.app_backend.model.Task
 import com.webcompiler.app_backend.model.TaskSolution

@@ -1,4 +1,6 @@
-import com.webcompiler.app_backend.service.VaultService
+package com.webcompiler.app_backend.service
+
+import com.webcompiler.app_backend.VaultService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*

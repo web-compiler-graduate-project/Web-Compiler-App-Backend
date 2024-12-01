@@ -1,6 +1,6 @@
 package com.webcompiler.app_backend.config
 
-import com.webcompiler.app_backend.service.CustomUserDetailsService
+import com.webcompiler.app_backend.CustomUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

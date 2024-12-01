@@ -6,8 +6,8 @@ import com.webcompiler.app_backend.api.admin.response.TaskResponse
 import com.webcompiler.app_backend.api.admin.response.UserResponse
 import com.webcompiler.app_backend.api.register.RegisterApi
 import com.webcompiler.app_backend.model.AppUserRole
-import com.webcompiler.app_backend.service.TaskService
-import com.webcompiler.app_backend.service.UserService
+import com.webcompiler.app_backend.TaskService
+import com.webcompiler.app_backend.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException

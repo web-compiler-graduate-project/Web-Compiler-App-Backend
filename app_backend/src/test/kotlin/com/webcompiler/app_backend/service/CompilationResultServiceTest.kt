@@ -1,5 +1,6 @@
 package com.webcompiler.app_backend.service
 
+import com.webcompiler.app_backend.CompilationResultService
 import com.webcompiler.app_backend.api.user.request.CompilationResultSaveRequest
 import com.webcompiler.app_backend.model.AppUser
 import com.webcompiler.app_backend.model.CompilationResult
