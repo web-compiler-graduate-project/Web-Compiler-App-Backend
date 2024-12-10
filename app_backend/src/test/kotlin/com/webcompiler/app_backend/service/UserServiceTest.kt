@@ -110,7 +110,7 @@ class UserServiceTest {
 
         target.updateUser(currentUsername, newUsername, newEmail, currentPassword, newPassword)
 
-        verify(vaultService).savePasswordPart2(newUsername, encodedPassword.drop(encodedPassword.length / 2))
+        verify(vaultService).savePasswordPart2(currentUsername, encodedPassword.drop(encodedPassword.length / 2))
         verify(userRepository).save(
             user.copy(
                 name = newUsername,

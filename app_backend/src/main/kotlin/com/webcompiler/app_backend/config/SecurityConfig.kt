@@ -2,6 +2,7 @@ package com.webcompiler.app_backend.config
 
 import com.webcompiler.app_backend.CustomUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -23,6 +24,9 @@ class SecurityConfig(
     @Autowired private val authenticationSuccessHandler: CustomAuthenticationSuccessHandler,
     @Autowired private val customLogoutSuccessHandler: CustomLogoutSuccessHandler,
 ) {
+
+    @Value("\${application-host}")
+    lateinit var applicationHost: String
 
     @Bean
     @Throws(Exception::class)
@@ -53,7 +57,7 @@ class SecurityConfig(
                 session
                     .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                     .maximumSessions(1)
-                    .expiredUrl("/session-expired")
+                    .expiredUrl(applicationHost)
             }
 
         return http.build()
@@ -74,7 +78,7 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf("http://localhost", "http://localhost:3000")
+        configuration.allowedOrigins = listOf(applicationHost)
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
         configuration.allowedHeaders = listOf("*")
         configuration.exposedHeaders = listOf("Authorization")

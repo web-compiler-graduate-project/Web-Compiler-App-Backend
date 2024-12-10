@@ -83,4 +83,10 @@ class VaultService(
         }
     }
 
+    fun updatePasswordDirectory(oldUsername: String?, newUsername: String?) {
+        if (oldUsername == null || newUsername == null) return
+        val secret = getPasswordPart2ByUsername(oldUsername)
+        savePasswordPart2(newUsername, secret)
+        deletePasswordByUsername(oldUsername)
+    }
 }

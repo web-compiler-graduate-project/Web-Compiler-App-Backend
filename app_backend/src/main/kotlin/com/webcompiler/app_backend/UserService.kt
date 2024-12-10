@@ -96,15 +96,14 @@ class UserService @Autowired constructor(
             HttpStatus.NOT_FOUND,
             "User not found"
         )
-        val newPasswordPart1 = handlePasswordUpdate(user, currentPassword, newPassword, newUsername)
+        val newPasswordPart1 = handlePasswordUpdate(user, currentPassword, newPassword)
         updateUserDetails(user, newUsername, newEmail, newPasswordPart1)
     }
 
     private fun handlePasswordUpdate(
         user: AppUser,
         currentPassword: String?,
-        newPassword: String?,
-        newUsername: String?
+        newPassword: String?
     ): String? {
         if (currentPassword == null || newPassword == null) {
             return null
@@ -117,11 +116,12 @@ class UserService @Autowired constructor(
             )
         }
         val encodedPassword = passwordEncoder.encode(newPassword)
-        vaultService.savePasswordPart2(newUsername ?: user.name, encodedPassword.drop(encodedPassword.length / 2))
+        vaultService.savePasswordPart2(user.name, encodedPassword.drop(encodedPassword.length / 2))
         return encodedPassword.take(encodedPassword.length / 2)
     }
 
     private fun updateUserDetails(user: AppUser, newUsername: String?, newEmail: String?, newPasswordPart1: String?) {
+        if (newUsername != null) vaultService.updatePasswordDirectory(user.name, newUsername)
         userRepository.save(
             user.copy(
                 name = newUsername ?: user.name,
