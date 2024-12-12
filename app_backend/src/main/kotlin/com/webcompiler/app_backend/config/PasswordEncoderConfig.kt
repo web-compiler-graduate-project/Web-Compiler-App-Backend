@@ -11,13 +11,12 @@ class PasswordEncoderConfig {
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
-        return NoOpPasswordEncoder.getInstance()
-//        return Argon2PasswordEncoder(
-//            16,
-//            32,
-//            2,
-//            65536,
-//            10
-//        )
+        return Argon2PasswordEncoder(
+            16,
+            32,
+            2,
+            65536,
+            10
+        )
     }
 }
