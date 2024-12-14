@@ -1,6 +1,8 @@
 package com.webcompiler.app_backend.config
 
 import com.webcompiler.app_backend.CustomUserDetailsService
+import com.webcompiler.app_backend.api.register.RegisterApi
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -78,7 +80,7 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf(applicationHost)
+        configuration.addAllowedOrigin(applicationHost)
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
         configuration.allowedHeaders = listOf("*")
         configuration.exposedHeaders = listOf("Authorization")
