@@ -1,10 +1,7 @@
-package com.webcompiler.app_backend
+package com.webcompiler.app_backend.service
 
-import com.webcompiler.app_backend.model.AppUser
 import com.webcompiler.app_backend.model.Task
-import com.webcompiler.app_backend.model.TaskSolution
 import com.webcompiler.app_backend.repository.TaskRepository
-import com.webcompiler.app_backend.repository.TaskSolutionRepository
 import com.webcompiler.app_backend.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired

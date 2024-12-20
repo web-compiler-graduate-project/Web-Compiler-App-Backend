@@ -1,4 +1,4 @@
-package com.webcompiler.app_backend
+package com.webcompiler.app_backend.service
 
 import com.webcompiler.app_backend.model.TaskSolution
 import com.webcompiler.app_backend.repository.TaskSolutionRepository

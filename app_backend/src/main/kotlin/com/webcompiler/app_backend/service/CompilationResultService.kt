@@ -1,4 +1,4 @@
-package com.webcompiler.app_backend
+package com.webcompiler.app_backend.service
 
 import com.webcompiler.app_backend.api.user.request.CompilationResultSaveRequest
 import com.webcompiler.app_backend.model.CompilationResult

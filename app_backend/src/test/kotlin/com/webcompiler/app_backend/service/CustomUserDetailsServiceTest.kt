@@ -1,8 +1,5 @@
 package com.webcompiler.app_backend.service
 
-import com.webcompiler.app_backend.CustomUserDetailsService
-import com.webcompiler.app_backend.UserService
-import com.webcompiler.app_backend.VaultService
 import com.webcompiler.app_backend.model.AppUser
 import com.webcompiler.app_backend.repository.UserRepository
 import org.junit.jupiter.api.BeforeEach

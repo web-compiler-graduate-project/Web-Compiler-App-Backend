@@ -1,4 +1,4 @@
-package com.webcompiler.app_backend
+package com.webcompiler.app_backend.service
 
 import com.webcompiler.app_backend.api.register.RegisterApi
 import com.webcompiler.app_backend.model.AppUserRole

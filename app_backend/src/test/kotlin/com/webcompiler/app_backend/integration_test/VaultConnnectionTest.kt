@@ -1,6 +1,6 @@
 package com.webcompiler.app_backend.integration_test
 
-import com.webcompiler.app_backend.VaultService
+import com.webcompiler.app_backend.service.VaultService
 import com.webcompiler.app_backend.integration_test.config.TestContainersConfig
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

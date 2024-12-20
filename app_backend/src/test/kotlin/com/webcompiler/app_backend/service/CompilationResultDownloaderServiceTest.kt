@@ -1,6 +1,5 @@
 package com.webcompiler.app_backend.service
 
-import com.webcompiler.app_backend.CompilationResultDownloaderService
 import com.webcompiler.app_backend.model.CompilationResult
 import com.webcompiler.app_backend.repository.CompilationResultRepository
 import org.junit.jupiter.api.Assertions.*

@@ -1,8 +1,6 @@
 package com.webcompiler.app_backend.config
 
-import com.webcompiler.app_backend.CustomUserDetailsService
-import com.webcompiler.app_backend.api.register.RegisterApi
-import org.slf4j.LoggerFactory
+import com.webcompiler.app_backend.service.CustomUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean

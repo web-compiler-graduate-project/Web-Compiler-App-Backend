@@ -1,7 +1,5 @@
 package com.webcompiler.app_backend.service
 
-import com.webcompiler.app_backend.UserService
-import com.webcompiler.app_backend.VaultService
 import com.webcompiler.app_backend.model.AppUser
 import com.webcompiler.app_backend.model.AppUserRole
 import com.webcompiler.app_backend.repository.UserRepository

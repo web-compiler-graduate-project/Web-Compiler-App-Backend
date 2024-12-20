@@ -1,4 +1,4 @@
-package com.webcompiler.app_backend
+package com.webcompiler.app_backend.service
 
 import com.webcompiler.app_backend.config.CustomUserDetails
 import com.webcompiler.app_backend.repository.UserRepository
